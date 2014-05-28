@@ -1,0 +1,63 @@
+<project name="My Project" default="dist" basedir=".">
+	<!-- this is helloworld program-->
+	<!-- this is helloworld program written by phani-->
+	<!-- this is helloworld program written by phani malepati-->
+	<property name="app.name"      value="HelloWorld-Version"/>
+	<property name="app.name"      value="HelloWorld Program"/>
+	<property name="app.version"   value="1.2"/>
+	<property name="tcserver.home" value="C:\Program Files\Apache\Tomcat 6.0" />
+	<property name="build.home"    value="${basedir}/build"/>
+	<property name="dist.home"     value="${basedir}/dist"/>
+	<property name="src.home"      value="${basedir}/src"/>
+	<property name="web.home"      value="${basedir}/web/testing-branch"/>
+  
+	<presetdef name="javac">
+		<javac includeantruntime="false" />
+	</presetdef>
+
+	<!-- Define the CLASSPATH -->
+	<path id="compile.classpath">
+	<fileset dir="${tcserver.home}/bin">
+	  <include name="*.jar"/>
+	</fileset>
+	<pathelement location="${tcserver.home}/lib"/>
+	<fileset dir="${tcserver.home}/lib">
+	  <include name="*.jar"/>
+	</fileset>
+	</path>
+	<target name="init">
+	   
+		<mkdir  dir="${dist.home}"/>
+		<mkdir  dir="${build.home}/WEB-INF/classes/java"/>
+		<mkdir dir="${web.home}"/>
+		<mkdir dir="${src.home}"/>
+		<copy todir="${build.home}">
+		  <fileset dir="${web.home}"/>
+		</copy>
+	</target>
+  
+	<target name="compile" depends="init">
+		<javac srcdir="${src.home}"
+			  destdir="${build.home}/WEB-INF/classes">
+			<classpath refid="compile.classpath"/>
+		</javac>
+		<copy  todir="${build.home}/WEB-INF/classes/java">
+		  <fileset dir="${src.home}" excludes="**/*.java"/>
+		</copy>
+	</target>
+
+	<target name="dist" depends="compile">
+		<jar jarfile="${dist.home}/${app.name}-${app.version}.war"	basedir="${build.home}"/>
+	</target>
+	
+	<target name="deploy" depends="dist">
+		<echo message="Copying the WAR to ${tcserver.home}"/>
+		<copy file="${dist.home}/${app.name}-${app.version}.war" todir="${tcserver.home}/webapps"/>
+	</target>
+  
+	<target name="clean">
+		<delete dir="${build.home}"/>
+		<delete dir="${dist.home}"/>
+	</target>
+
+</project>
