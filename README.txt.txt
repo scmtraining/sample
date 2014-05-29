@@ -1,1 +1,2 @@
-This is a line that is writing in Master branch.
+This is the changed made in Hotfix branch.
+
